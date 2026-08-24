@@ -1,15 +1,12 @@
-from selenium import webdriver
+from playwright.sync_api import sync_playwright
 
-print("Starting Chrome...")
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=False)
 
-driver = webdriver.Chrome()
+    page = browser.new_page()
 
-print("Chrome started")
+    page.goto("https://www.google.com")
 
-driver.get("https://www.google.com")
+    print(page.title())
 
-print("Title:", driver.title)
-
-input("Press Enter to close Chrome...")
-
-driver.quit()
+    browser.close()
