@@ -1,0 +1,18 @@
+---
+description: Non-negotiable NYGGS Playwright automation standards for every change
+alwaysApply: true
+---
+
+# NYGGS automation — always on
+
+Read and follow `.cursor/skills/nyggs-automation-standards/SKILL.md` before changing Python automation.
+
+Non-negotiables:
+
+- Page Object Model: locators on page classes only. Tests never use raw selectors.
+- Shared actions belong in `src/automation/core/`. Do not copy-paste helpers.
+- Multi-step reuse belongs in `src/automation/flows/`.
+- Python + Playwright sync + pytest only. No Selenium. No `time.sleep`.
+- No hardcoded URLs or credentials. Never commit `.env`.
+- Low complexity: one job per function, early returns, clear names, no dead code.
+- Allowed patterns: Page Object, Factory, Facade, Settings.
