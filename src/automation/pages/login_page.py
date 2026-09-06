@@ -8,9 +8,15 @@ class LoginPage(BasePage):
     PASSWORD = "input[placeholder='Password']"
     SIGN_IN = "button.submit-button"
     LANDING_HEADING = "text=Welcome to NYGGS"
+    LOGO = ".logo-container img"
 
     def wait_until_loaded(self) -> "LoginPage":
         self.wait_for_visible(self.EMPLOYEE_CODE)
+        self.wait_for_visible(self.LOGO)
+        self.page.wait_for_function(
+            "() => (document.querySelector('.logo-container img')?.getAttribute('src') || '').length > 8",
+            timeout=self.settings.default_timeout_ms,
+        )
         return self
 
     def open(self) -> "LoginPage":

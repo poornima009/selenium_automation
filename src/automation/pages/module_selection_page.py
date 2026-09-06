@@ -13,7 +13,6 @@ class ModuleSelectionPage(BasePage):
     LOGOUT = "img.logout_button"
 
     def wait_until_loaded(self) -> "ModuleSelectionPage":
-        self.wait_for_url_contains("modulesSelection")
         self.wait_for_visible(self.HEADING)
         self.wait_for_visible(self.CARD)
         return self

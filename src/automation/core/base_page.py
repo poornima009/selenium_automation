@@ -34,7 +34,14 @@ class BasePage:
     def click(self, selector: str) -> None:
         logger.info("Clicking %s", selector)
         self.wait_for_visible(selector)
-        self.locator(selector).click()
+        target = self.locator(selector)
+        target.scroll_into_view_if_needed()
+        target.click()
+
+    def hover(self, selector: str) -> None:
+        logger.info("Hovering %s", selector)
+        self.wait_for_visible(selector)
+        self.locator(selector).hover()
 
     def get_text(self, selector: str) -> str:
         self.wait_for_visible(selector)
