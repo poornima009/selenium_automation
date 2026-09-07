@@ -16,7 +16,10 @@ class BrowserFactory:
 
     def start(self) -> Page:
         self._playwright = sync_playwright().start()
-        self._browser = self._playwright.chromium.launch(headless=self._settings.headless)
+        self._browser = self._playwright.chromium.launch(
+            headless=self._settings.headless,
+            slow_mo=self._settings.slow_mo_ms,
+        )
         self._context = self._browser.new_context()
         self._context.set_default_timeout(self._settings.default_timeout_ms)
         return self._context.new_page()

@@ -24,6 +24,7 @@ class Settings:
     site_name: str
     headless: bool
     default_timeout_ms: int
+    slow_mo_ms: int
 
 
 @lru_cache(maxsize=1)
@@ -43,4 +44,5 @@ def get_settings() -> Settings:
         site_name=os.getenv("SITE_NAME", "Demo"),
         headless=_as_bool(os.getenv("HEADLESS", "true")),
         default_timeout_ms=int(os.getenv("DEFAULT_TIMEOUT_MS", "30000")),
+        slow_mo_ms=int(os.getenv("SLOW_MO_MS", "0")),
     )

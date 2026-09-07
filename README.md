@@ -20,10 +20,12 @@ Put `SSO_USERNAME` and `SSO_PASSWORD` in `.env`. Do not commit `.env`.
 pytest tests/test_login.py -v
 pytest tests/test_module_selection.py -v
 pytest tests/test_site_selection.py -v
+pytest tests/test_store_tiles.py -v
+pytest tests/test_store_list_flows.py -v
 pytest tests -v
 ```
 
-Set `HEADLESS=false` in `.env` to watch the browser.
+Set `HEADLESS=false` to watch the browser. Set `SLOW_MO_MS=1000` to pause about one second between actions.
 
 ## Layout
 
