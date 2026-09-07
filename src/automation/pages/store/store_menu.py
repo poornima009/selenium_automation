@@ -1,40 +1,10 @@
 """Live Store menu on Demo. Parents with children are not clickable leaves."""
 
+from automation.pages.store.master.entities import MASTER_TREE
+
 STORE_MENU: dict[str, dict[str, list[str] | None] | list[str]] = {
     "Dashboard": [],
-    "Master": {
-        "Store": None,
-        "Permission": None,
-        "Document Type": None,
-        "Category": None,
-        "Tax": None,
-        "T&C": None,
-        "Equipment": None,
-        "Site Grouping": None,
-        "Templates": None,
-        "Item": [
-            "Unit",
-            "Items",
-            "Manufacturer/Model",
-            "Low Stock Configuration",
-            "Item Custom Filter",
-        ],
-        "Account": [
-            "Contractor",
-            "Supplier",
-            "Transporter",
-            "Departments",
-            "Merge Accounts",
-            "Client",
-            "Fabricator",
-        ],
-        "Location": ["Chainage", "Other Location", "Structure"],
-        "Employees": ["Employee", "Designation", "Employee Type", "Department"],
-        "Module Utilities": ["File-Upload", "Item-SerialNo-Upload"],
-        "Item Planning Details": None,
-        "RFQ Role Mapping": None,
-        "Material Movement": None,
-    },
+    "Master": MASTER_TREE,
     "Purchase": ["Purchase Order", "Purchase Return", "Dispatches", "Advance Payment"],
     "Stock Receipt": ["MRN Slip", "Stock Transfer", "Short & Excess"],
     "Issue": ["Issue Slip", "Issue Return", "Issue Gate Pass"],

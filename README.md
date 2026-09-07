@@ -25,7 +25,7 @@ pytest tests/test_store_list_flows.py -v
 pytest tests -v
 ```
 
-Set `HEADLESS=false` in `.env` to watch the browser.
+Set `HEADLESS=false` to watch the browser. Set `SLOW_MO_MS=1000` to pause about one second between actions.
 
 ## Layout
 
