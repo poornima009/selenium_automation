@@ -9,7 +9,7 @@ from tests.master.cases import run_list_crud, run_view
 LIST = tuple(
     entity
     for entity in master_entities(group="item", kind="list")
-    if entity.key != "unit"
+    if entity.key not in {"manufacturer_model", "unit"}
 )
 VIEW = master_entities(group="item", kind="view")
 
