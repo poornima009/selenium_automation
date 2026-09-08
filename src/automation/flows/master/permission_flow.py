@@ -24,20 +24,38 @@ class MasterPermissionFlow:
         self._list = MasterListPage(page, self._settings)
         self._form = MasterPermissionPage(page, self._settings)
 
-    def open(self) -> MasterPermissionPage:
+    def open(self, module: str = PERMISSION_MODULE) -> MasterPermissionPage:
         self._list.dismiss_overlay()
         self._nav.open_path(*master_entity("permission").path)
         self._list.dismiss_overlay()
         self._form.select_role(PERMISSION_ROLE)
-        self._form.filter_module(PERMISSION_MODULE)
-        self._form.expand_module(PERMISSION_MODULE)
+        self._form.filter_module(module)
+        self._form.expand_module(module)
         return self._form
 
-    def grant(self, operation: str) -> MasterPermissionPage:
-        logger.info("Granting Permission %s on %s", operation, PERMISSION_MODULE)
-        form = self.open()
-        form.grant(PERMISSION_MODULE, operation)
+    def grant(
+        self,
+        operation: str,
+        module: str = PERMISSION_MODULE,
+    ) -> MasterPermissionPage:
+        logger.info("Granting Permission %s on %s", operation, module)
+        form = self.open(module)
+        form.grant(module, operation)
         form.save_module()
-        form.filter_module(PERMISSION_MODULE)
-        form.expand_module(PERMISSION_MODULE)
+        form.filter_module(module)
+        form.expand_module(module)
+        return form
+
+    def grant_operations(
+        self,
+        module: str,
+        operations: tuple[str, ...],
+    ) -> MasterPermissionPage:
+        logger.info("Granting %s permissions on %s", ", ".join(operations), module)
+        form = self.open(module)
+        for operation in operations:
+            form.grant(module, operation)
+        form.save_module()
+        form.filter_module(module)
+        form.expand_module(module)
         return form

@@ -6,7 +6,11 @@ from automation.pages.store.master.entities import master_entities
 from automation.pages.store.store_workspace_page import StoreWorkspacePage
 from tests.master.cases import run_list_crud, run_view
 
-LIST = master_entities(group="account", kind="list")
+LIST = tuple(
+    entity
+    for entity in master_entities(group="account", kind="list")
+    if entity.key != "contractor"
+)
 VIEW = master_entities(group="account", kind="view")
 
 

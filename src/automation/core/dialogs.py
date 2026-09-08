@@ -70,7 +70,8 @@ def confirm_action(
 
 def _fill_remark(dialog: Locator, remark: str) -> None:
     field = dialog.locator(
-        "textarea, input[placeholder*='Remark' i], input[name*='remark' i]"
+        "textarea, input[placeholder*='Remark' i], input[name*='remark' i], "
+        "input[placeholder*='comment' i]"
     )
     if field.count() == 0:
         logger.info("No remark field on confirm dialog")
@@ -79,6 +80,7 @@ def _fill_remark(dialog: Locator, remark: str) -> None:
     target = field.last
     target.click()
     target.fill(remark)
+    target.press("Tab")
 
 
 def _wait_for_confirm_button(page: Page, timeout_ms: int) -> bool:
