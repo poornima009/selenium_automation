@@ -12,6 +12,7 @@ LIST = tuple(
     if entity.key not in {
         "client",
         "contractor",
+        "departments",
         "fabricator",
         "supplier",
         "transporter",
