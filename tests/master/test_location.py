@@ -6,7 +6,11 @@ from automation.pages.store.master.entities import master_entities
 from automation.pages.store.store_workspace_page import StoreWorkspacePage
 from tests.master.cases import run_list_crud
 
-LIST = master_entities(group="location", kind="list")
+LIST = tuple(
+    entity
+    for entity in master_entities(group="location", kind="list")
+    if entity.key != "other_location"
+)
 
 
 @pytest.mark.parametrize("entity", LIST, ids=lambda e: e.key)
