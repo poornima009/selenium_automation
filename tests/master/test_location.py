@@ -9,7 +9,7 @@ from tests.master.cases import run_list_crud
 LIST = tuple(
     entity
     for entity in master_entities(group="location", kind="list")
-    if entity.key not in {"other_location", "structure"}
+    if entity.key not in {"chainage", "other_location", "structure"}
 )
 
 
