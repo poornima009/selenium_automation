@@ -8,6 +8,7 @@ from playwright.sync_api import Page
 from automation.config.settings import Settings, get_settings
 from automation.core.browser import BrowserFactory
 from automation.core.logger import get_logger
+from automation.core.reporting import ReportManager
 from automation.flows.enter_store_flow import EnterStoreFlow
 from automation.flows.login_flow import LoginFlow
 from automation.pages.module_selection_page import ModuleSelectionPage
@@ -15,6 +16,24 @@ from automation.pages.store.store_nav_page import StoreNavPage
 from automation.pages.store.store_workspace_page import StoreWorkspacePage
 
 logger = get_logger(__name__)
+_report_manager: ReportManager | None = None
+_report_path: Path | None = None
+
+
+def pytest_sessionstart(session: pytest.Session) -> None:
+    global _report_manager
+    _report_manager = ReportManager(Path(str(session.config.rootpath)))
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+    if _report_manager is not None:
+        _report_manager.register_tests(items)
+
+
+def pytest_deselected(items: list[pytest.Item]) -> None:
+    if _report_manager is not None:
+        _report_manager.mark_deselected(items)
 
 
 @pytest.fixture(scope="session")
@@ -87,15 +106,38 @@ def store_session(_store_browser: _StoreBrowser):
 def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
-    if report.when != "call" or not report.failed:
+    if _report_manager is not None:
+        _report_manager.record_report(report)
+    if not report.failed:
         return
-    session = item.funcargs.get("store_session")
-    if session is None:
+    page = _page_for_failure(item)
+    if page is None or page.is_closed() or _report_manager is None:
         return
-    page, _workspace = session
-    if page.is_closed():
+    path = _report_manager.screenshot_path(item.nodeid)
+    try:
+        page.screenshot(path=str(path), full_page=True)
+        _report_manager.attach_screenshot(item.nodeid, path)
+    except Exception:
+        logger.exception("Could not capture failure screenshot for %s", item.nodeid)
+
+
+def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
+    global _report_path
+    if _report_manager is not None:
+        _report_path = _report_manager.finish(exitstatus)
+
+
+def pytest_terminal_summary(terminalreporter) -> None:
+    if _report_path is None:
         return
-    folder = Path("reports/failures")
-    folder.mkdir(parents=True, exist_ok=True)
-    name = item.nodeid.replace("/", "_").replace("::", "_").replace(" ", "_")
-    page.screenshot(path=str(folder / f"{name}.png"))
+    terminalreporter.write_sep("=", f"HTML report: {_report_path}")
+
+
+def _page_for_failure(item: pytest.Item) -> Page | None:
+    page = item.funcargs.get("page")
+    if page is not None:
+        return page
+    store_session = item.funcargs.get("store_session")
+    if store_session is None:
+        return None
+    return store_session[0]
