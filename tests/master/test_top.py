@@ -15,6 +15,7 @@ LIST = tuple(
         "site_grouping",
         "tandc",
         "tax",
+        "templates",
     }
 )
 VIEW = master_entities(group="top", kind="view")
