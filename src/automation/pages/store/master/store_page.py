@@ -115,33 +115,7 @@ class MasterStorePage(BasePage):
         field.press("Tab")
 
     def fill_remark(self, remark: str) -> None:
-        logger.info("Filling Store remark")
-        if self._fill_remark_control(remark):
-            return
-        box = self.page.locator(
-            "textarea[placeholder*='Remark' i], textarea[name*='remark' i], "
-            "input[placeholder*='Remark' i]"
-        )
-        if box.count() == 0:
-            logger.info("No remark field on Store form")
-            return
-        box.first.fill(remark)
-
-    def _fill_remark_control(self, remark: str) -> bool:
-        field = self.labeled_control("Remark")
-        try:
-            field.wait_for(state="visible", timeout=1500)
-            field.fill(remark)
-            return True
-        except Exception:
-            pass
-        labeled = self.page.get_by_label("Remark", exact=False)
-        try:
-            labeled.first.wait_for(state="visible", timeout=1500)
-            labeled.first.fill(remark)
-            return True
-        except Exception:
-            return False
+        self.fill_optional_remark(remark, "Store")
 
     def wait_until_named(self, name: str) -> None:
         self.wait_loading_gone()

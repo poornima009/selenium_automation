@@ -148,6 +148,25 @@ class BasePage:
         field.wait_for(state="visible", timeout=self.settings.default_timeout_ms)
         field.fill(value)
 
+    def fill_optional_remark(self, remark: str, screen_name: str) -> None:
+        logger.info("Filling %s remark", screen_name)
+        candidates = (
+            self.labeled_control("Remark"),
+            self.page.get_by_label("Remark", exact=False).first,
+            self.page.locator(
+                "textarea[placeholder*='Remark' i], textarea[name*='remark' i], "
+                "input[placeholder*='Remark' i]"
+            ).first,
+        )
+        for field in candidates:
+            try:
+                field.wait_for(state="visible", timeout=1500)
+                field.fill(remark)
+                return
+            except Exception:
+                continue
+        logger.info("No remark field on %s form", screen_name)
+
     def select_autocomplete(self, selector: str, option: str) -> None:
         logger.info("Selecting %s on %s", option, selector)
         self.click(selector)
